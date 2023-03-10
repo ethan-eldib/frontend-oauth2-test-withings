@@ -6,11 +6,12 @@ const App = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [score, setScore] = useState(0);
     const [showScore, setShowScore] = useState(false);
+    const [answerSelected, setAnswerSelected] = useState("");
 
 
     useEffect(() => {
         try {
-            axios.get('https://the-trivia-api.com/api/questions?categories=arts,film,music&limit=5&region=FR&difficulty=easy&language=FR')
+            axios.get('https://the-trivia-api.com/api/questions?categories=food,film,general_knowledge&limit=5&region=FR&difficulty=easy&language=fr')
                 .then(res => {
                     setQuestions(res.data);
                 })
@@ -22,53 +23,57 @@ const App = () => {
     const handleAnswerButtonClick = (answer) => {
         if (answer === questions[currentQuestion].correctAnswer) {
             setScore(score + 1);
+            setAnswerSelected('correct');
+        } else {
+            setAnswerSelected('incorrect');
         }
 
-        const nextQuestion = currentQuestion + 1;
-        if (nextQuestion < questions.length) {
-            setCurrentQuestion(nextQuestion);
-        } else {
-            setShowScore(true);
-        }
+        setTimeout(() => {
+            const nextQuestion = currentQuestion + 1;
+            if (nextQuestion < questions.length) {
+                setCurrentQuestion(nextQuestion);
+                setAnswerSelected("");
+            } else {
+                setShowScore(true);
+            }
+        }, 1000);
     }
 
 
     const renderQuiz = () => {
         return (
-            <>
-                <h1>Quiz</h1>
+            <div className='quiz'>
+                <h1 className='quiz-header'>Quiz - Question {currentQuestion + 1}</h1>
                 {questions.length > 0  && (
                     <>
-                        <h2>Question {currentQuestion + 1}</h2>
-                        <h3>{questions[currentQuestion].question}</h3>
-                        {questions[currentQuestion].incorrectAnswers.map((answer, index) => (
-                            <button key={index} onClick={() => handleAnswerButtonClick(answer)}>{answer}</button>
-                        ))}
-                        <button
-                            onClick={() => handleAnswerButtonClick(questions[currentQuestion].correctAnswer)}>{questions[currentQuestion].correctAnswer}
-                        </button>
+                        <h3 className='quiz-question'>{questions[currentQuestion].question}</h3>
+                        <div className='btn-display'>
+                            {questions[currentQuestion].incorrectAnswers.map((answer, index) => (
+                                <button key={index} className='btn-quiz-response' onClick={() => handleAnswerButtonClick(answer)}>{answer}</button>
+                            ))}
+                            <button
+                                className={`btn-quiz-response ${answerSelected === 'correct' ? 'btn-correct' : ''} ${answerSelected === 'incorrect' ? 'btn-incorrect' : ''}`}
+                                onClick={() => handleAnswerButtonClick(questions[currentQuestion].correctAnswer)}>{questions[currentQuestion].correctAnswer}
+                            </button>
+                        </div>
+
                     </>
                 )}
-            </>
+            </div>
         );
     }
 
     const renderScore = () => {
         return (
-            <>
-                <h1>Quiz</h1>
-                <h2>Votre score</h2>
-                <p>{score} / {questions.length}</p>
-            </>
+            <div className={'score-wrap'}>
+                <h2 className={'score-title'}>Votre score</h2>
+                <p className={'score-result'}>Vous avez répondu correctement à <span className={`${questions.length < 3 ? 'correct' : 'incorrect'}`}>{score}</span> question(s) sur {questions.length} .</p>
+            </div>
         );
     }
 
     return (
         <div className="App">
-            <div className="App-header">
-                <h1>Quiz</h1>
-            </div>
-
             <div className="App-content">
                 {showScore ? renderScore() : renderQuiz()}
             </div>

@@ -86,3 +86,66 @@ body {
 	margin: 20px 0;
 	text-align: center;
 }
+
+.quiz-header {
+	background-color: #333;
+	color: white;
+	padding: 25px;
+	border-radius: 5px;
+}
+
+.quiz-question {
+	font-size: 1rem;
+	margin: 20px 0px 20px 0px;
+}
+
+.btn-quiz-response {
+	padding: 11px;
+	margin: 5px;
+}
+
+.btn-quiz-response:hover {
+	cursor: pointer;
+}
+
+.btn-display {
+	display: grid;
+	justify-content: center;
+}
+
+.btn-correct {
+	background-color: darkgreen;
+	color: white;
+}
+
+.btn-incorrect {
+	background-color: darkred;
+	color: white;
+}
+
+.score-wrap {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+
+.score-title {
+	font-size: 2rem;
+	margin-bottom: 1rem;
+}
+
+.score-result {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 2rem;
+}
+
+.score-result span.correct {
+	color: green;
+}
+
+.score-result span.incorrect {
+	color: red;
+}
