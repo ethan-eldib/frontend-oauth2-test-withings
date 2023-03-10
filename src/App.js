@@ -13,7 +13,6 @@ const App = () => {
             axios.get('https://the-trivia-api.com/api/questions?categories=arts_and_literature,film_and_tv,music&limit=5&region=FR&difficulty=easy')
                 .then(res => {
                     setQuestions(res.data);
-                    console.log(res.data)
                 })
         } catch (e) {
             console.error(e.error);
@@ -33,19 +32,22 @@ const App = () => {
         }
     }
 
+    if (questions.length > 0 ) {
+        console.log(questions[currentQuestion])
+    }
     const renderQuiz = () => {
         return (
             <>
                 <h1>Quiz</h1>
-                {currentQuestion  && (
+                {questions.length > 0  && (
                     <>
                         <h2>Question {currentQuestion + 1}</h2>
                         <h3>{questions[currentQuestion].question}</h3>
-                        {questions[currentQuestion].incorrect_answers.map((answer, index) => (
+                        {questions[currentQuestion].incorrectAnswers.map((answer, index) => (
                             <button key={index} onClick={() => handleAnswerButtonClick(answer)}>{answer}</button>
                         ))}
                         <button
-                            onClick={() => handleAnswerButtonClick(questions[currentQuestion].correct_answer)}>{questions[currentQuestion].correct_answer}
+                            onClick={() => handleAnswerButtonClick(questions[currentQuestion].correctAnswer)}>{questions[currentQuestion].correctAnswer}
                         </button>
                     </>
                 )}
