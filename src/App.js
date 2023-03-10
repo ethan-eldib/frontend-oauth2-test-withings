@@ -1,46 +1,79 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from "axios";
-import Question from './Question';
 
 const App = () => {
-	const [questions, setQuestions] = useState([]);
-	const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [questions, setQuestions] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [score, setScore] = useState(0);
+    const [showScore, setShowScore] = useState(false);
 
-	const fetchQuestions = async () => {
-		try {
-			const response = await axios.get(
-				'https://the-trivia-api.com/questions?limit=5'
-			);
-			setQuestions(response.data);
-			setCurrentQuestion(response.data[0]);
-			console.log(response)
-		} catch (error) {
-			console.error(error);
-		}
-	};
 
-	const nextQuestion = () => {
-		// TODO : update score and go to next question
-	}
+    useEffect(() => {
+        try {
+            axios.get('https://the-trivia-api.com/api/questions?categories=arts_and_literature,film_and_tv,music&limit=5&region=FR&difficulty=easy')
+                .then(res => {
+                    setQuestions(res.data);
+                    console.log(res.data)
+                })
+        } catch (e) {
+            console.error(e.error);
+        }
+    }, []);
 
-	useEffect(() => {
-		fetchQuestions();
-	}, [])
+    const handleAnswerButtonClick = (answer) => {
+        if (answer === questions[currentQuestion].correct_answer) {
+            setScore(score + 1);
+        }
 
-	return(
-		<div className="App">
-			<div className="App-header">
-				<h1>Quiz</h1>
-			</div>
+        const nextQuestion = currentQuestion + 1;
+        if (nextQuestion < questions.length) {
+            setCurrentQuestion(nextQuestion);
+        } else {
+            setShowScore(true);
+        }
+    }
 
-			<div className="App-content">
-				<Question
-					question={currentQuestion}
-					nextQuestion={nextQuestion}
-				/>
-			</div>
-		</div>
-	);
+    const renderQuiz = () => {
+        return (
+            <>
+                <h1>Quiz</h1>
+                {currentQuestion  && (
+                    <>
+                        <h2>Question {currentQuestion + 1}</h2>
+                        <h3>{questions[currentQuestion].question}</h3>
+                        {questions[currentQuestion].incorrect_answers.map((answer, index) => (
+                            <button key={index} onClick={() => handleAnswerButtonClick(answer)}>{answer}</button>
+                        ))}
+                        <button
+                            onClick={() => handleAnswerButtonClick(questions[currentQuestion].correct_answer)}>{questions[currentQuestion].correct_answer}
+                        </button>
+                    </>
+                )}
+            </>
+        );
+    }
+
+    const renderScore = () => {
+        return (
+            <>
+                <h1>Quiz</h1>
+                <h2>Votre score</h2>
+                <p>{score} / {questions.length}</p>
+            </>
+        );
+    }
+
+    return (
+        <div className="App">
+            <div className="App-header">
+                <h1>Quiz</h1>
+            </div>
+
+            <div className="App-content">
+                {showScore ? renderScore() : renderQuiz()}
+            </div>
+        </div>
+    );
 }
 
 export default App;
