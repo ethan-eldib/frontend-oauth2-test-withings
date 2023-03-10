@@ -10,7 +10,7 @@ const App = () => {
 
     useEffect(() => {
         try {
-            axios.get('https://the-trivia-api.com/api/questions?categories=arts_and_literature,film_and_tv,music&limit=5&region=FR&difficulty=easy')
+            axios.get('https://the-trivia-api.com/api/questions?categories=arts,film,music&limit=5&region=FR&difficulty=easy&language=FR')
                 .then(res => {
                     setQuestions(res.data);
                 })
@@ -20,7 +20,7 @@ const App = () => {
     }, []);
 
     const handleAnswerButtonClick = (answer) => {
-        if (answer === questions[currentQuestion].correct_answer) {
+        if (answer === questions[currentQuestion].correctAnswer) {
             setScore(score + 1);
         }
 
@@ -32,9 +32,7 @@ const App = () => {
         }
     }
 
-    if (questions.length > 0 ) {
-        console.log(questions[currentQuestion])
-    }
+
     const renderQuiz = () => {
         return (
             <>
