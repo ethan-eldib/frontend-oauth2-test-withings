@@ -67,7 +67,7 @@ const App = () => {
         return (
             <div className={'score-wrap'}>
                 <h2 className={'score-title'}>Votre score</h2>
-                <p className={'score-result'}>Vous avez répondu correctement à <span className={`${questions.length < 3 ? 'correct' : 'incorrect'}`}>{score}</span> question(s) sur {questions.length} .</p>
+                <p className={'score-result'}>Vous avez répondu correctement à <span className={`${score >= 3 ? 'correct' : 'incorrect'}`}>{score}</span> question(s) sur {questions.length} .</p>
             </div>
         );
     }
